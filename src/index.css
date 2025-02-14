@@ -240,3 +240,23 @@ body{
 .honker:hover{
   box-shadow: 1px 1px 10px #4fa74f;
 }
+
+/* تأثير الظل عند الـ Hover */
+.hover\:shadow-xl:hover {
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* تأثير تكبير الصورة عند الـ Hover */
+.transition-transform:hover {
+  transform: scale(1.05);
+}
+
+
+
+
+/* تحسين تأثير الزر عند الضغط */
+button:active {
+  transform: scale(0.98);
+}
+
+

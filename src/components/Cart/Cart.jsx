@@ -1,21 +1,33 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../Context/CartContext';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Cart() {
-  const { getLoggedUserCard, updateCartProductQuantity, deleteCardItem, setnumberItems } = useContext(CartContext);
-  const [CardDetailis, setCardDetalis] = useState(null);
+  const { 
+    getLoggedUserCard, 
+    updateCartProductQuantity, 
+    deleteCardItem, 
+    setnumberItems,
+    clearCart,
+    deleteCart,
+    cartId
+  } = useContext(CartContext);
+  
+  const [cartDetails, setCartDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [removingProduct, setRemovingProduct] = useState(null);
-  const [updatingProduct, setUpdatingProduct] = useState(null); // ✅ حالة جديدة لتحميل التحديث
+  const [updatingProduct, setUpdatingProduct] = useState(null);
+  const [clearingCart, setClearingCart] = useState(false);
+  const navigate = useNavigate();
 
-  async function getCardItem() {
+  // Fetch cart items
+  async function getCartItems() {
     setLoading(true);
     try {
       let response = await getLoggedUserCard();
       if (response.data.status === "success") {
-        setCardDetalis(response.data.data);
+        setCartDetails(response.data.data);
       }
     } catch (error) {
       console.error("Error fetching cart data", error);
@@ -23,15 +35,49 @@ export default function Cart() {
     setLoading(false);
   }
 
+  
+  async function handleClearCart() {
+    setClearingCart(true);
+    try {
+      let response = await clearCart();
+      if (response.data.status === "success") {
+        toast.success("Cart cleared successfully");
+        
+      
+        setCartDetails({
+          ...cartDetails,
+          products: [],
+          totalCartPrice: 0,
+          totalCartPriceAfterDiscount: 0,
+          numOfCartItems: 0
+        });
+        
+      
+        setnumberItems(0);
+
+        
+        await getCartItems();
+      }
+    } catch (error) {
+      toast.error("Error clearing cart");
+    }
+    setClearingCart(false);
+  }
+
+  
   async function deleteItem(productId) {
     setRemovingProduct(productId);
     try {
       let response = await deleteCardItem(productId);
       if (response.data.status === "success") {
         toast.success("Product removed successfully");
-        const updatedProducts = CardDetailis.products.filter(product => product.product.id !== productId);
-        const updatedTotalPrice = updatedProducts.reduce((total, product) => total + (product.price * product.count), 0);
-        setCardDetalis(prev => ({
+        const updatedProducts = cartDetails.products.filter(
+          product => product.product.id !== productId
+        );
+        const updatedTotalPrice = updatedProducts.reduce(
+          (total, product) => total + (product.price * product.count), 0
+        );
+        setCartDetails(prev => ({
           ...prev,
           products: updatedProducts,
           totalCartPrice: updatedTotalPrice,
@@ -44,18 +90,21 @@ export default function Cart() {
     setRemovingProduct(null);
   }
 
+  
   async function updateProduct(id, count) {
     if (count === 0) return;
     
-    setUpdatingProduct(id); // ✅ تفعيل التحميل
+    setUpdatingProduct(id);
     try {
       let response = await updateCartProductQuantity(id, count);
       if (response.data.status === "success") {
-        const updatedProducts = CardDetailis.products.map(product => 
+        const updatedProducts = cartDetails.products.map(product => 
           product.product.id === id ? { ...product, count } : product
         );
-        const updatedTotalPrice = updatedProducts.reduce((total, product) => total + (product.price * product.count), 0);
-        setCardDetalis(prev => ({
+        const updatedTotalPrice = updatedProducts.reduce(
+          (total, product) => total + (product.price * product.count), 0
+        );
+        setCartDetails(prev => ({
           ...prev,
           products: updatedProducts,
           totalCartPrice: updatedTotalPrice,
@@ -65,28 +114,46 @@ export default function Cart() {
     } catch (error) {
       toast.error("Error updating product");
     }
-    setUpdatingProduct(null); // ✅ إيقاف التحميل
+    setUpdatingProduct(null);
   }
 
   useEffect(() => {
-    getCardItem();
+    getCartItems();
   }, []);
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="loader"></div>
+      <div className="relative min-h-[60vh]">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="loader"></div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-6">
-      {CardDetailis?.products.length > 0 ? (
+      {cartDetails?.products?.length > 0 ? (
         <>
           <h2 className="text-center text-2xl text-emerald-600 font-bold capitalize my-4">
-            Total Price: {CardDetailis?.totalCartPrice.toFixed(2)} EGP
+            Total Price: {cartDetails?.totalCartPrice.toFixed(2)} EGP
           </h2>
+
+          {/* Clear All Button */}
+          <div className='flex mt-4'>
+      {cartId ? <button onClick={()=>{deleteCart() ; navigate('/')}} className='    capitalize 
+          py-2 px-4 
+          border 
+          rounded-md 
+          text-xl 
+          m-auto 
+          border-red-500 
+          text-red-500 
+          hover:bg-red-500 
+          hover:text-white 
+          transition-colors 
+          duration-300 my-5 cursor-pointer '> Clear your carts </button> : ''}
+      </div>
 
           {/* Desktop Table */}
           <div className="hidden lg:block overflow-x-auto">
@@ -101,7 +168,7 @@ export default function Cart() {
                 </tr>
               </thead>
               <tbody>
-                {CardDetailis?.products.map((product) => (
+                {cartDetails?.products.map((product) => (
                   <tr key={product.product.id} className="bg-white border-b hover:bg-gray-50">
                     <td className="p-4">
                       <img 
@@ -162,7 +229,7 @@ export default function Cart() {
 
           {/* Mobile Grid */}
           <div className="lg:hidden grid gap-4">
-            {CardDetailis?.products.map((product) => (
+            {cartDetails?.products.map((product) => (
               <div key={product.product.id} className="bg-white p-4 rounded-lg shadow-md">
                 <div className="flex gap-4">
                   <img
@@ -218,7 +285,14 @@ export default function Cart() {
           <div className="text-center mt-8">
             <Link 
               to="/checkout"
-              className="bg-emerald-600 text-white px-8 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+              className={`bg-emerald-600 text-white px-8 py-3 rounded-lg hover:bg-emerald-700 transition-colors ${
+                cartDetails?.products.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              onClick={(e) => {
+                if (cartDetails?.products.length === 0) {
+                  e.preventDefault();
+                }
+              }}
             >
               Proceed to Checkout
             </Link>
@@ -228,7 +302,7 @@ export default function Cart() {
         <div className="text-center py-12">
           <h1 className="text-3xl text-red-600 font-bold mb-4">Your Cart is Empty</h1>
           <Link
-            to="/products"
+            to="/"
             className="text-emerald-600 hover:underline text-lg"
           >
             Continue Shopping

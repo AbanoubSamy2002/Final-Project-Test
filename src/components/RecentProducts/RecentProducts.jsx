@@ -82,7 +82,7 @@ export default function RecentProducts() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navbar الثابتة يجب أن تكون في مكون منفصل أعلى التسلسل الهرمي */}
+      
       
       <div className="container mx-auto px-4 py-12 relative">
         {initialLoading && (
@@ -126,7 +126,7 @@ export default function RecentProducts() {
               className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 group overflow-hidden flex flex-col h-full"
             >
               <Link 
-                to={`/productdetails/${product._id}`} 
+                to={`/productdetails/${product._id}/${product.category.name}`} 
                 className="block relative flex-1"
               >
                 <div className="relative aspect-square overflow-hidden">

@@ -18,9 +18,9 @@ import { Toaster } from 'react-hot-toast';
 import Checkout from './components/Checkout/Checkout';
 import Allorders from './components/Allorders/Allorders';
 import CardLikeContextProvider from './components/Context/CarLikeContext';
-import ForgetPasswordEmail from './components/Login/ForgetPasswordEmail';
-import VerifyResetCode from './components/Login/VerifyResetCode';
-import ResetPassword from './components/Login/ResetPassword';
+import PasswordProcess from './components/PasswordProcess/PasswordProcess';
+import VerifyCode from './components/VerifyCode/VerifyCode';
+import ResetPassword from './components/ResetPassword/ResetPassword';
 
 let x = createBrowserRouter([
   {
@@ -31,14 +31,14 @@ let x = createBrowserRouter([
       { path: "products", element: <ProtectRoute><Products /></ProtectRoute> },
       { path: "cart", element: <ProtectRoute><Cart /></ProtectRoute> },
       { path: "brands", element: <ProtectRoute><Brands /></ProtectRoute> },
-      { path: "productdetails/:id", element: <ProtectRoute><ProductDeta /></ProtectRoute> },
+      { path: "productdetails/:id/:category", element: <ProtectRoute><ProductDeta /></ProtectRoute> },
       { path: "categories", element: <ProtectRoute><Categories /></ProtectRoute> },
       { path: "checkout", element: <ProtectRoute><Checkout /></ProtectRoute> },
       { path: "register", element: <Register /> },
       { path: "login", element: <Login /> },
-      { path: "forget-password", element: <ForgetPasswordEmail /> },
-      { path: "/forget-password/verify", element: <VerifyResetCode /> },
-      { path: "/forget-password/reset", element: <ResetPassword /> },
+      { path: "/passwordProcess", element: <PasswordProcess /> },
+      { path: "passwordProcess/verifyCode", element: <VerifyCode/> },
+      { path: "passwordProcess/resetPassword", element: <ResetPassword/> },
 
       { path: "wishlist", element: <ProtectRoute><Wish /></ProtectRoute> },
       { path: "allorders", element: <ProtectRoute><Allorders/></ProtectRoute> },

@@ -124,7 +124,7 @@ let formik = useFormik({
   className="text-white bg-emerald-700 hover:bg-emerald-800 focus:ring-4 focus:outline-none focus:ring-emerald-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center  ">{isLoading?<i className='fas fa-spinner fa-spin'></i>:"Login"}</button>
 
   <Link to="/register"  ><span className='text-blue-500 underline'> Do you have an account? Register Now</span></Link>
-  <Link to="/forget-password"  ><span className='text-blue-500 underline'> Forget your password?</span></Link>
+  <Link to={'/passwordProcess'} className='text-blue-500 underline '>Forget your password?</Link>
 </div>
 
  
