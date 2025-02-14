@@ -3,6 +3,7 @@ import axios from "axios";
 import { CartContext } from "../Context/CartContext";
 import { CardLikeContext } from "../Context/CarLikeContext";
 import toast from "react-hot-toast";
+import Footer from './../Footer/Footer';
 
 export default function Categories() {
   const { addProductToCard, setnumberItems } = useContext(CartContext);
@@ -202,6 +203,6 @@ Categories
     </div>
   
   
-  
+    <Footer/>
   </>
 }

@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { CartContext } from '../Context/CartContext';
 import toast from 'react-hot-toast';
+import Footer from './../Footer/Footer';
 
 export default function ProductDeta() {
   const { addProductToCard, getLoggedUserCard, setnumberItems } = useContext(CartContext);
@@ -231,7 +232,7 @@ export default function ProductDeta() {
     </div>
   </div>
 )}
-
+<Footer/>
     </>
   );
 }

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { CartContext } from '../Context/CartContext';
 import { CardLikeContext } from '../Context/CarLikeContext';
 import toast from 'react-hot-toast';
+import Footer from './../Footer/Footer';
 
 export default function RecentProducts() {
   const [initialLoading, setInitialLoading] = useState(true);
@@ -80,8 +81,8 @@ export default function RecentProducts() {
 
   const categories = ['All', ...new Set(products.map(product => product.category.name))];
 
-  return (
-    <div className="min-h-screen bg-gray-50">
+  return <>
+  <div className="min-h-screen bg-gray-50">
       
       
       <div className="container mx-auto px-4 py-12 relative">
@@ -224,5 +225,6 @@ export default function RecentProducts() {
         )}
       </div>
     </div>
-  );
+  
+  </>
 }
