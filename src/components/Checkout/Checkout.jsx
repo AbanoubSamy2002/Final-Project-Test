@@ -17,7 +17,7 @@ let formik = useFormik({
       city:"",
     },
     
-    onSubmit : ()=>handleCheckout(cartId,`http://localhost:5173`), 
+    onSubmit : ()=>handleCheckout(cartId,`https://final-project-test-xrgk.vercel.app`), 
   })
   
 
